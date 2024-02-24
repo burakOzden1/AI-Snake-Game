@@ -2,9 +2,14 @@
 <module type="PYTHON_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/py_venv" />
+      <excludeFolder url="file://$MODULE_DIR$/pygame_env" />
+      <excludeFolder url="file://$MODULE_DIR$/pygame_venv" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
+      <excludeFolder url="file://$MODULE_DIR$/env" />
+      <excludePattern pattern="pygame_venv" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.12 (AI Snake Game)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.12 virtualenv at C:\Users\zbura\OneDrive\Masaüstü\AI Snake Game\pygame_env" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
