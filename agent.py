@@ -12,14 +12,14 @@ LR = 0.001
 
 
 class Agent:
+
     def __init__(self):
         self.n_games = 0
-        self.epsilon = 0    # randomness
-        self.gamma = 0.9    # discount rate
+        self.epsilon = 0  # randomness
+        self.gamma = 0.9  # discount rate
         self.memory = deque(maxlen=MAX_MEMORY)  # popleft()
         self.model = Linear_QNet(11, 256, 3)
         self.trainer = QTrainer(self.model, lr=LR, gamma=self.gamma)
-
 
     def get_state(self, game):
         head = game.snake[0]
@@ -34,51 +34,52 @@ class Agent:
         dir_d = game.direction == Direction.DOWN
 
         state = [
-            # Danger Straight
+            # Danger straight
             (dir_r and game.is_collision(point_r)) or
             (dir_l and game.is_collision(point_l)) or
             (dir_u and game.is_collision(point_u)) or
             (dir_d and game.is_collision(point_d)),
 
-            # Danger Right
+            # Danger right
             (dir_u and game.is_collision(point_r)) or
             (dir_d and game.is_collision(point_l)) or
             (dir_l and game.is_collision(point_u)) or
-            (dir_d and game.is_collision(point_d)),
+            (dir_r and game.is_collision(point_d)),
 
-            # Danger Left
+            # Danger left
             (dir_d and game.is_collision(point_r)) or
             (dir_u and game.is_collision(point_l)) or
             (dir_r and game.is_collision(point_u)) or
             (dir_l and game.is_collision(point_d)),
 
-            # Move Direction
+            # Move direction
             dir_l,
             dir_r,
             dir_u,
             dir_d,
 
-            # Food Location
+            # Food location
             game.food.x < game.head.x,  # food left
             game.food.x > game.head.x,  # food right
             game.food.y < game.head.y,  # food up
-            game.food.y > game.head.y   # food down
-            ]
+            game.food.y > game.head.y  # food down
+        ]
 
         return np.array(state, dtype=int)
 
     def remember(self, state, action, reward, next_state, done):
-        self.memory.append((state, action, reward, next_state, done)) # popleft if MAX_MEMORY is reached
+        self.memory.append((state, action, reward, next_state, done))  # popleft if MAX_MEMORY is reached
 
     def train_long_memory(self):
         if len(self.memory) > BATCH_SIZE:
-            mini_sample = random.sample(self.memory, BATCH_SIZE)    # list of tuples
+            mini_sample = random.sample(self.memory, BATCH_SIZE)  # list of tuples
         else:
             mini_sample = self.memory
 
         states, actions, rewards, next_states, dones = zip(*mini_sample)
         self.trainer.train_step(states, actions, rewards, next_states, dones)
-
+        # for state, action, reward, nexrt_state, done in mini_sample:
+        #    self.trainer.train_step(state, action, reward, next_state, done)
 
     def train_short_memory(self, state, action, reward, next_state, done):
         self.trainer.train_step(state, action, reward, next_state, done)
@@ -130,10 +131,10 @@ def train():
             agent.train_long_memory()
 
             if score > record:
-                recort = score
+                record = score
                 agent.model.save()
 
-            print('Game:', agent.n_games, 'Score:', score, 'Record:', record)
+            print('Game', agent.n_games, 'Score', score, 'Record:', record)
 
             plot_scores.append(score)
             total_score += score
@@ -144,36 +145,3 @@ def train():
 
 if __name__ == '__main__':
     train()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
